@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Children Height Prediction</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Children Height Prediction">
+  <meta name="author" content="Anh Mai">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Children Height Prediction</h1>
+    <h2></h2>
+    <p>Anh Mai<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Introduction</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The data for prediction is Galton&#39;s data set</li>
+<li>It includes 898 cases of 6 variables</li>
+<li>In this app, I focus on parents height (<code>Father</code> and <code>Mother</code>) and children gender (<code>Gender</code>) in order to predict children height (<code>Height</code>)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Building model</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>I use simple linear regression method to build a model for prediction</p></li>
+<li><p>Firstly, I split data to training and test set for validation,</p></li>
+</ul>
+
+<pre><code class="r">library(caret)
+data &lt;- read.csv(&quot;Galton.csv&quot;)
+set.seed(7395)
+in_train &lt;- createDataPartition(data$Height, p = 0.8, list = FALSE)
+train &lt;- data[in_train, ]
+test &lt;- data[-in_train, ]
+</code></pre>
+
+<ul>
+<li>Build model</li>
+</ul>
+
+<pre><code class="r">mod_lm &lt;- train(Height ~ Father + Mother + Gender, data = train, method = &quot;lm&quot;)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Evaluation</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Prection for test set</li>
+</ul>
+
+<pre><code class="r">pred &lt;- predict(mod_lm, newdata = test)
+</code></pre>
+
+<ul>
+<li>Evaluate result by root-mean-squared error</li>
+</ul>
+
+<pre><code class="r">rms &lt;- sqrt(mean((pred - test$Height) ^ 2))
+rms
+</code></pre>
+
+<pre><code>## [1] 2.145169
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Shiny app</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>I&#39;ve created and deployed an app for this prediction in this <a href="https://theanht1.shinyapps.io/Children_Height_Prediction/">URL</a></p></li>
+<li><p>This app requires users giving the height of parents and gender of child then it indicates the predicted height for this child.</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Introduction'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Building model'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Evaluation'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Shiny app'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
